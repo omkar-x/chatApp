@@ -1,0 +1,10 @@
+# Root level ignore
+node_modules
+.env
+build
+dist
+.vscode
+
+# Server-specific (optional)
+server/node_modules
+server/.env
