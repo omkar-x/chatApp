@@ -4,7 +4,7 @@ import mongoose from "mongoose";
 export const connectDB = async ()=>{
     try{
         //event is added
-        mongoose.connection.on('connected',()=> console.log('database connected successfullly'));
+        mongoose.connection.on('connected',()=> console.log('database connected successfully'));
 
         //make connection
         await mongoose.connect(`${process.env.MONGODB_URI}/chat-app`)

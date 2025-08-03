@@ -5,7 +5,7 @@ import cloudinary from "../lib/cloudinary.js"
 
 //singup a new user
 export const signup = async ()=>{
-    const {fullName, email, password, bio} = requestAnimationFrame.body;
+    const {fullName, email, password, bio} = req.body;
 
     try{
        if(!fullName || !email || !password || !bio){
@@ -61,7 +61,6 @@ export const checkAuth = (req, res)=>{
 
 
 //controller to update the user profile details
-
 export const updateProfile = async(req,res)=>{
     try{
        const {profilePic, bio, fullName} = req.body;
@@ -70,12 +69,12 @@ export const updateProfile = async(req,res)=>{
        let updatedUser;
 
        if(!profilePic){
-        await User.findByIdUpdate(userId, {bio , fullName}, {new: true});
+         updatedUser =  await User.findByIdUpdate(userId, {bio , fullName}, {new: true});
        }
        else{
         const upload = await cloudinary.uploader.upload(profilePic);
 
-        updatedUser = await User.findByIdAndUpdate(userId, {profilePic: upload.secure_url, bio, fullName}, {new:true})
+        updatedUser = await User.findByIdAndUpdate(userId, {profilePic: upload.secure_url, bio, fullName}, {new:true});
        }
        res.json({success:true, user:updatedUser})
     }catch(error){
