@@ -4,7 +4,7 @@ import bcrypt from "bcryptjs"
 import cloudinary from "../lib/cloudinary.js"
 
 //singup a new user
-export const signup = async ()=>{
+export const signup = async (req, res)=>{
     const {fullName, email, password, bio} = req.body;
 
     try{
@@ -14,7 +14,7 @@ export const signup = async ()=>{
        const user = await User.findOne({email});
 
        if(user){
-         return res.json({success: false, message: "Missing Details"})
+         return res.json({success: false, message: "Email already exists"})
        }
 
        const salt = await bcrypt.genSalt(10);
@@ -24,12 +24,14 @@ export const signup = async ()=>{
         fullName, email, password: hashedPassword, bio
        });
        
+
        const token = generateToken(newUser._id)
        res.json({success: true, userData: newUser, token, message: "Account created successfully"})
 
+       
     }catch(error){
       console.log(error.message);
-      res.json({success: false, userData: newUser, token, message: error.message})
+      res.status(500).json({success: false, message: error.message}); // cleaner, avoids undefined
     }
 }
 
@@ -69,7 +71,7 @@ export const updateProfile = async(req,res)=>{
        let updatedUser;
 
        if(!profilePic){
-         updatedUser =  await User.findByIdUpdate(userId, {bio , fullName}, {new: true});
+         updatedUser =  await User.findByIdAndUpdate(userId, {bio , fullName}, {new: true});
        }
        else{
         const upload = await cloudinary.uploader.upload(profilePic);
